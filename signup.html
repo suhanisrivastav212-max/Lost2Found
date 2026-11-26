@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Sign Up | Lost2Found</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+
+        }
+
+    body {
+        min-height: 100vh;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        background: #080713;
+        color: white;
+        font-family: Arial, sans-serif;
+        padding: 20px;
+
+    }
+
+    .signup-card {
+
+        width: 100%;
+        max-width: 400px;
+        padding: 35px;
+        background: #121020;
+        border: 1px solid #38305d;
+        border-radius: 20px;
+        box-shadow: 0 0 35px #7040ff20;
+
+    }
+
+    .logo {
+
+        text-align: center;
+        font-size: 27px;
+        font-weight: bold;
+        margin-bottom: 10px;
+
+    }
+
+    .logo span {
+            color: #a78bfa;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa5bd;
+            margin-bottom: 25px;
+        }
+
+        label {
+            display: block;
+            margin: 15px 0 8px;
+            color: #e2def5;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            background: #0b0916;
+            border: 1px solid #39334f;
+            border-radius: 9px;
+            color: white;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #a78bfa;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: linear-gradient(90deg, #7c3aed, #a855f7);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .login, .back {
+            text-align: center;
+            margin-top: 20px;
+            color: #aaa5bd;
+        }
+
+        a {
+            color: #c4b5fd;
+            text-decoration: none;
+        }
+    
+    </style>
+</head>
+
+<body>
+
+    <div class="signup-card">
+        <div class="logo">✦ Lost<span>2Found</span></div>
+        <p class="subtitle">Create your account to get started.</p>
+
+        <form id="signupForm">
+            <label for="name">Full Name</label>
+            <input type="text" id="name" placeholder="Enter your full name" required>
+
+            <label for="email">Email Address</label>
+            <input type="email" id="email" placeholder="Enter your Email" required>
+
+            <label for="password">Password</label>
+            <input type="password" id="password" placeholder="Create a Password" 
+                minlength="8" required>
+
+                <button type="submit">Create Account</button>
+
+        </form>
+
+        <p class="login">Already have an account?</p>
+
+        <a href="login.html">Login</a>
+        </p>
+
+        <p class="back">
+        <a href="index.html">← Back to Home</a>
+        </p>
+
+    </div>
+
+    <script>
+
+        
+document.getElementById("signupForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    // Get form values
+    const name = document.getElementById("name").value.trim();
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    try {
+        // Send data to backend
+        const response = await fetch("http://localhost:3000/api/signup", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                name: name,
+                email: email,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            alert("Signup successful! Now please login.");
+            window.location.href = "login.html";
+        } else {
+            alert(data.message);
+        }
+
+    } catch (error) {
+        console.error("Signup error:", error);
+        alert("Server se connection nahi ho pa raha hai.");
+    }
+});
+
+
+    </script>
+ </body>
+    </html>
+
+
+
+
+
+

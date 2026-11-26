@@ -1,0 +1,277 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <title>Item Details | Lost2Found</title>
+
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+
+        body {
+            min-height: 100vh;
+            background: #080d18;
+            color: #f5f7ff;
+            font-family: Arial, sans-serif;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 30px 15px;
+        }
+
+        .details-card {
+            width: 100%;
+            max-width: 850px;
+            background: #111c2e;
+            border: 1px solid #263c59;
+            border-radius: 22px;
+            padding: 38px;
+            box-shadow: 0 0 35px rgba(59, 130, 246, 0.08);
+        }
+
+        .top-bar {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 30px;
+        }
+
+        .logo {
+            color: #60a5fa;
+            font-size: 22px;
+            font-weight: bold;
+        }
+
+        .home-btn {
+            color: white;
+            text-decoration: none;
+            border: 1px solid #40516c;
+            padding: 10px 20px;
+            border-radius: 10px;
+        }
+
+        h1 {
+            font-size: 34px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #aabbd2;
+            margin-bottom: 28px;
+            line-height: 1.6;
+        }
+
+        .item-image {
+            width: 100%;
+            height: 300px;
+            background: #091322;
+            border: 1px solid #30435f;
+            border-radius: 14px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            overflow: hidden;
+            margin-bottom: 25px;
+            color: #8ca0bb;
+        }
+
+        .item-image img {
+            width: 100%;
+            height: 100%;
+            object-fit: contain;
+        }
+
+        .item-info {
+            background: #0b1423;
+            border: 1px solid #263c59;
+            border-radius: 14px;
+            padding: 25px;
+        }
+
+        .item-info h2 {
+            margin-bottom: 20px;
+            color: #60a5fa;
+            font-size: 26px;
+        }
+
+        .info-row {
+            padding: 13px 0;
+            border-bottom: 1px solid #263449;
+            color: #d7e1ef;
+            line-height: 1.5;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        .info-row strong {
+            color: #8fbaff;
+        }
+
+        .status {
+            display: inline-block;
+            background: #123b2c;
+            color: #6ee7b7;
+            padding: 6px 13px;
+            border-radius: 20px;
+            font-size: 13px;
+        }
+
+        .back-btn {
+            display: inline-block;
+            margin-top: 25px;
+            padding: 13px 24px;
+            background: #3b91f5;
+            color: #061426;
+            text-decoration: none;
+            font-weight: bold;
+            border-radius: 10px;
+        }
+
+        @media (max-width: 600px) {
+            .details-card {
+                padding: 22px;
+            }
+
+            h1 {
+                font-size: 27px;
+            }
+
+            .item-image {
+                height: 220px;
+            }
+        }
+    </style>
+</head>
+
+<body>
+
+    <main class="details-card">
+
+        <div class="top-bar">
+            <div class="logo">Lost2Found</div>
+            <a href="index.html" class="home-btn">Home</a>
+        </div>
+
+        <h1>Item Details</h1>
+
+        <p class="subtitle">
+            Complete information about the reported item.
+        </p>
+
+        <div id="itemDetails">
+            Loading item details...
+        </div>
+
+        <a href="index.html" class="back-btn">← Back to Home</a>
+
+    </main>
+
+    <script>
+        const params = new URLSearchParams(window.location.search);
+
+        const itemId = params.get("id");
+        const itemName = params.get("name");
+
+        async function loadItemDetails() {
+
+            const container = document.getElementById("itemDetails");
+
+            if (!itemId) {
+                container.textContent = itemName || "Item Not Found";
+                return;
+            }
+
+            try {
+                const response = await fetch(
+                    `http://localhost:3000/api/items/${encodeURIComponent(itemId)}`
+                );
+
+                if (!response.ok) {
+                    throw new Error("Item not found");
+                }
+
+                const item = await response.json();
+
+                const imageUrl = item.image
+                    ? (item.image.startsWith("http")
+                        ? item.image
+                        : `http://localhost:3000${item.image}`)
+                    : "";
+
+                container.innerHTML = `
+                    <div class="item-image">
+                        ${
+                            imageUrl
+                            ? `<img src="${imageUrl}" alt="Reported item"
+                                onerror="this.parentElement.textContent='Image unavailable'">`
+                            : "No image uploaded"
+                        }
+                    </div>
+
+                    <section class="item-info">
+
+                        <h2>${escapeHTML(item.name || "Unnamed Item")}</h2>
+
+                        <div class="info-row">
+                            <strong>Status:</strong>
+                            <span class="status">
+                                ${escapeHTML(item.status || "Not provided")}
+                            </span>
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Location:</strong>
+                            ${escapeHTML(item.location || "Not provided")}
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Date:</strong>
+                            ${item.createdAt
+                                ? new Date(item.createdAt).toLocaleDateString("en-IN")
+                                : "Not provided"}
+                        </div>
+
+                        <div class="info-row">
+                            <strong>Description:</strong>
+                            ${escapeHTML(item.description || "Not provided")}
+                        </div>
+
+                    </section>
+
+                    <a href="contact-item.html?id=${encodeURIComponent(item._id)}"
+                        class="back-btn">
+                        I Have Information
+                    </a>
+
+
+                `;
+
+            } catch (error) {
+                container.textContent = "Item details could not be loaded.";
+                console.error(error);
+            }
+        }
+
+        function escapeHTML(value) {
+            return String(value).replace(/[&<>"']/g, char => ({
+                "&": "&amp;",
+                "<": "&lt;",
+                ">": "&gt;",
+                '"': "&quot;",
+                "'": "&#39;"
+            })[char]);
+        }
+
+        loadItemDetails();
+    </script>
+
+</body>
+</html>

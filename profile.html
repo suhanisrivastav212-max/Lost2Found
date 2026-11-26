@@ -1,0 +1,568 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<title>Lost2Found | My Profile</title>
+
+<style>
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: Arial, sans-serif;
+}
+
+body {
+    background: #080b14;
+    color: #fff;
+    min-height: 100vh;
+}
+
+.navbar {
+    height: 75px;
+    padding: 0 7%;
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    background: #101522;
+    border-bottom: 1px solid #252d40;
+}
+
+.logo {
+    font-size: 25px;
+    font-weight: bold;
+    color: #b89aff;
+}
+
+.nav-links {
+    display: flex;
+    gap: 25px;
+}
+
+.nav-links a {
+    color: #cbd5e1;
+    text-decoration: none;
+    font-size: 14px;
+}
+
+.nav-links a:hover,
+.nav-links a.active {
+    color: #b89aff;
+}
+
+.container {
+    max-width: 1100px;
+    margin: 40px auto;
+    padding: 0 20px;
+}
+
+.page-heading {
+    margin-bottom: 30px;
+}
+
+.page-heading h1 {
+    font-size: 30px;
+    margin-bottom: 8px;
+}
+
+.page-heading p {
+    color: #94a3b8;
+}
+
+.profile-layout {
+    display: grid;
+    grid-template-columns: 300px 1fr;
+    gap: 25px;
+}
+
+.card {
+    background: #111827;
+    border: 1px solid #293247;
+    border-radius: 15px;
+    padding: 25px;
+}
+
+.profile-card {
+    text-align: center;
+}
+
+.avatar {
+    width: 105px;
+    height: 105px;
+    border-radius: 50%;
+    margin: 0 auto 18px;
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    background: linear-gradient(135deg, #b89aff, #758cff);
+    color: #080b14;
+    font-size: 38px;
+    font-weight: bold;
+}
+
+.profile-card h2 {
+    font-size: 21px;
+    margin-bottom: 8px;
+}
+
+.profile-card p {
+    color: #94a3b8;
+    font-size: 14px;
+    word-break: break-word;
+}
+
+.member {
+    display: inline-block;
+    margin-top: 15px;
+    padding: 7px 13px;
+    border-radius: 20px;
+    background: #27213d;
+    color: #c4a8ff;
+    font-size: 12px;
+}
+
+.btn {
+    border: none;
+    padding: 11px 18px;
+    border-radius: 8px;
+    cursor: pointer;
+    font-weight: bold;
+    transition: 0.2s;
+}
+
+.edit-btn {
+    background: #b89aff;
+    color: #080b14;
+    margin-top: 20px;
+}
+
+.btn:hover {
+    opacity: 0.85;
+    transform: translateY(-1px);
+}
+
+.details-card h2,
+.items-card h2 {
+    font-size: 20px;
+    color: #b89aff;
+    margin-bottom: 22px;
+}
+
+.detail-row {
+    display: flex;
+    justify-content: space-between;
+    gap: 15px;
+    padding: 15px 0;
+    border-bottom: 1px solid #293247;
+}
+
+.detail-row:last-child {
+    border-bottom: none;
+}
+
+.detail-label {
+    color: #94a3b8;
+}
+
+.detail-value {
+    text-align: right;
+    overflow-wrap: anywhere;
+}
+
+.items-card {
+    margin-top: 25px;
+}
+
+.items-header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    gap: 15px;
+}
+
+.item-count {
+    background: #27213d;
+    color: #c4a8ff;
+    padding: 7px 12px;
+    border-radius: 20px;
+    font-size: 13px;
+}
+
+.empty-message {
+    text-align: center;
+    padding: 35px 10px;
+    color: #94a3b8;
+    line-height: 1.7;
+}
+
+.empty-icon {
+    font-size: 35px;
+    margin-bottom: 12px;
+}
+
+.modal {
+    display: none;
+    position: fixed;
+    inset: 0;
+    background: rgba(0, 0, 0, 0.75);
+    align-items: center;
+    justify-content: center;
+    padding: 20px;
+    z-index: 10;
+}
+
+.modal-content {
+    background: #111827;
+    border: 1px solid #39445d;
+    border-radius: 15px;
+    padding: 25px;
+    width: 100%;
+    max-width: 430px;
+}
+
+.modal-content h2 {
+    color: #b89aff;
+    margin-bottom: 20px;
+}
+
+.form-group {
+    margin-bottom: 17px;
+}
+
+.form-group label {
+    display: block;
+    color: #cbd5e1;
+    margin-bottom: 8px;
+    font-size: 14px;
+}
+
+.form-group input {
+    width: 100%;
+    padding: 12px;
+    border-radius: 8px;
+    background: #080b14;
+    border: 1px solid #39445d;
+    color: white;
+    outline: none;
+}
+
+.form-group input:focus {
+    border-color: #b89aff;
+}
+
+.modal-actions {
+    display: flex;
+    gap: 10px;
+    margin-top: 20px;
+}
+
+.save-btn {
+    background: #b89aff;
+    color: #080b14;
+}
+
+.cancel-btn {
+    background: #293247;
+    color: white;
+}
+
+footer {
+    text-align: center;
+    padding: 25px;
+    color: #64748b;
+    font-size: 13px;
+    margin-top: 35px;
+}
+
+@media (max-width: 750px) {
+    .profile-layout {
+        grid-template-columns: 1fr;
+    }
+
+    .navbar {
+        padding: 0 20px;
+    }
+
+    .nav-links {
+        gap: 12px;
+    }
+
+    .nav-links a {
+        font-size: 12px;
+    }
+}
+
+@media (max-width: 450px) {
+    .navbar {
+        height: auto;
+        padding: 18px;
+        flex-direction: column;
+        gap: 15px;
+    }
+
+    .page-heading h1 {
+        font-size: 25px;
+    }
+
+    .detail-row {
+        flex-direction: column;
+        gap: 7px;
+    }
+
+    .detail-value {
+        text-align: left;
+    }
+}
+</style>
+</head>
+
+<body>
+
+<!-- Navbar -->
+<nav class="navbar">
+    <div class="logo">Lost2Found</div>
+
+    <div class="nav-links">
+        <a href="index.html">Home</a>
+        <a href="report-found.html">Report Item</a>
+        <a href="notifications.html">Notifications</a>
+        <a href="profile.html" class="active">Profile</a>
+    </div>
+</nav>
+
+<!-- Main Content -->
+<div class="container">
+
+    <div class="page-heading">
+        <h1>My Profile</h1>
+        <p>Manage your account and view your activity.</p>
+    </div>
+
+    <div class="profile-layout">
+
+        <!-- Profile Card -->
+        <div class="card profile-card">
+
+            <div class="avatar" id="avatar">U</div>
+
+            <h2 id="profileName">User Name</h2>
+            <p id="profileEmail">user@example.com</p>
+
+            <span class="member">Lost2Found Member</span>
+
+            <br>
+
+            <button class="btn edit-btn" onclick="openModal()">
+                Edit Profile
+            </button>
+
+        </div>
+
+        <!-- Personal Details -->
+        <div class="card details-card">
+
+            <h2>Personal Information</h2>
+
+            <div class="detail-row">
+                <span class="detail-label">Full Name</span>
+                <span class="detail-value" id="detailName">User Name</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Email Address</span>
+                <span class="detail-value" id="detailEmail">
+                    user@example.com
+                </span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Account Type</span>
+                <span class="detail-value">User</span>
+            </div>
+
+            <div class="detail-row">
+                <span class="detail-label">Platform</span>
+                <span class="detail-value">Lost2Found</span>
+            </div>
+
+        </div>
+
+    </div>
+
+    <!-- My Items -->
+    <div class="card items-card">
+
+        <div class="items-header">
+            <h2>My Reported Items</h2>
+            <span class="item-count" id="itemCount">0 Items</span>
+        </div>
+
+        <div class="empty-message">
+            <div class="empty-icon">📦</div>
+            <p>No reported items displayed yet.</p>
+            <p>Your reported items will appear here.</p>
+        </div>
+
+    </div>
+
+</div>
+
+<!-- Edit Profile Modal -->
+<div class="modal" id="editModal">
+
+    <div class="modal-content">
+
+        <h2>Edit Profile</h2>
+
+        <div class="form-group">
+            <label for="editName">Full Name</label>
+            <input type="text" id="editName" placeholder="Enter your name">
+        </div>
+
+        <div class="form-group">
+            <label for="editEmail">Email Address</label>
+            <input type="email" id="editEmail" placeholder="Enter your email">
+        </div>
+
+        <div class="modal-actions">
+            <button class="btn save-btn" onclick="saveProfile()">
+                Save Changes
+            </button>
+
+            <button class="btn cancel-btn" onclick="closeModal()">
+                Cancel
+            </button>
+        </div>
+
+    </div>
+
+</div>
+
+<footer>
+    © 2026 Lost2Found. All Rights Reserved.
+</footer>
+
+<script>
+
+
+let userName = "";
+let userEmail = "";
+
+// Get saved login token
+const token = localStorage.getItem("token");
+
+// Update profile UI
+function updateProfileUI() {
+    document.getElementById("profileName").textContent = userName;
+    document.getElementById("profileEmail").textContent = userEmail;
+
+    document.getElementById("detailName").textContent = userName;
+    document.getElementById("detailEmail").textContent = userEmail;
+
+    document.getElementById("avatar").textContent =
+        userName.charAt(0).toUpperCase() || "U";
+}
+
+// Fetch profile from backend
+async function loadProfile() {
+    if (!token) {
+        alert("Please login first.");
+        window.location.href = "login.html";
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:3000/api/profile", {
+            method: "GET",
+            headers: {
+                "Authorization": `Bearer ${token}`
+            }
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Could not load profile.");
+            return;
+        }
+
+        userName = data.user.name;
+        userEmail = data.user.email;
+
+        updateProfileUI();
+
+    } catch (error) {
+        console.error("Profile error:", error);
+        alert("Server connection failed.");
+    }
+}
+
+// Open edit modal
+function openModal() {
+    document.getElementById("editName").value = userName;
+    document.getElementById("editEmail").value = userEmail;
+
+    document.getElementById("editModal").style.display = "flex";
+}
+
+// Close edit modal
+function closeModal() {
+    document.getElementById("editModal").style.display = "none";
+}
+
+// Save profile to MongoDB
+async function saveProfile() {
+    const name = document.getElementById("editName").value.trim();
+    const email = document.getElementById("editEmail").value.trim();
+
+    if (!name || !email) {
+        alert("Please fill all fields.");
+        return;
+    }
+
+    if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(email)) {
+        alert("Please enter a valid email address.");
+        return;
+    }
+
+    try {
+        const response = await fetch("http://localhost:3000/api/profile", {
+            method: "PUT",
+            headers: {
+                "Content-Type": "application/json",
+                "Authorization": `Bearer ${token}`
+            },
+            body: JSON.stringify({ name, email })
+        });
+
+        const data = await response.json();
+
+        if (!response.ok) {
+            alert(data.message || "Profile update failed.");
+            return;
+        }
+
+        userName = data.user.name;
+        userEmail = data.user.email;
+
+        updateProfileUI();
+        closeModal();
+
+        alert("Profile updated successfully!");
+
+    } catch (error) {
+        console.error("Update error:", error);
+        alert("Server connection failed.");
+    }
+}
+
+// Load profile when page opens
+loadProfile();
+
+</script>
+
+</body>
+</html>

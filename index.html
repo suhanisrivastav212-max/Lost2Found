@@ -1,0 +1,2485 @@
+
+
+<!DOCTYPE html>
+
+<html lang="en">
+
+<head>
+
+    <meta charset="UTF-8">
+
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+    <meta name="theme-color" content="#070b12">
+
+    <meta name="description" content="Lost2Found helps people report, search, and reconnect with lost belongings.">
+
+    <title>Lost2Found | Find What Matters</title>
+
+    <style>
+
+        :root {
+
+            --bg: #070b12;
+
+            --bg-soft: #0b1220;
+
+            --surface: rgba(16, 27, 43, 0.82);
+
+            --surface-solid: #101b2b;
+
+            --surface-hover: #14243a;
+
+            --text: #eef7ff;
+
+            --muted: #9aadc2;
+
+            --blue: #b89aff;
+
+            --blue-strong: #8a6cff;
+
+            --blue-dim: rgba(184, 154, 255, 0.12);
+
+            --border: rgba(184, 154, 255, 0.18);
+
+            --glow: 0 0 36px rgba(155, 105, 255, 0.22);
+
+            --radius: 20px;
+
+        }
+
+        * {
+
+            margin: 0;
+
+            padding: 0;
+
+            box-sizing: border-box;
+
+        }
+
+        html {
+
+            scroll-behavior: smooth;
+
+            scroll-padding-top: 90px;
+
+        }
+
+        body {
+
+            font-family: Inter, ui-sans-serif, system-ui, -apple-system, BlinkMacSystemFont, "Segoe UI", sans-serif;
+
+            background:
+
+                radial-gradient(ellipse at 15% 0%, rgba(115, 69, 180, 0.18), transparent 38%),
+
+                radial-gradient(ellipse at 90% 28%, rgba(99, 60, 170, 0.13), transparent 32%),
+
+                var(--bg);
+
+            color: var(--text);
+
+            line-height: 1.6;
+
+            min-height: 100vh;
+
+            overflow-x: hidden;
+
+        }
+
+        body::before {
+
+            content: "";
+
+            position: fixed;
+
+            inset: 0;
+
+            z-index: -1;
+
+            pointer-events: none;
+
+            opacity: 0.18;
+
+            background-image: radial-gradient(rgba(184, 154, 255, 0.32) 0.7px, transparent 0.7px);
+
+            background-size: 28px 28px;
+
+            mask-image: linear-gradient(to bottom, black, transparent 78%);
+
+        }
+
+        a, button, input {
+
+            -webkit-tap-highlight-color: transparent;
+
+        }
+
+        button {
+
+            cursor: pointer;
+
+            border: 1px solid transparent;
+
+            border-radius: 12px;
+
+            padding: 12px 18px;
+
+            font: inherit;
+
+            font-weight: 700;
+
+            transition: transform .25s ease, **background** .25s ease, border-color .25s ease, box-shadow .25s ease, color .25s ease;
+
+        }
+
+        button:focus-visible, a:focus-visible, input:focus-visible {
+
+            outline: 2px solid var(--blue);
+
+            outline-offset: 4px;
+
+        }
+
+        /* Navbar */
+
+        nav {
+
+            position: sticky;
+
+            top: 0;
+
+            z-index: 20;
+
+            display: flex;
+
+            justify-content: space-between;
+
+            align-items: center;
+
+            gap: 24px;
+
+            padding: 17px max(5%, calc((100% - 1180px) / 2));
+
+            background: rgba(7, 11, 18, 0.78);
+
+            border-bottom: 1px solid rgba(141, 216, 255, 0.12);
+
+            backdrop-filter: blur(18px);
+
+        }
+
+        .logo {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 2px;
+
+            font-size: 25px;
+
+            font-weight: 850;
+
+            letter-spacing: -1.1px;
+
+            color: var(--blue);
+
+            white-space: nowrap;
+
+        }
+
+        .logo span {
+
+            color: var(--text);
+
+        }
+
+        .nav-links {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 27px;
+
+        }
+
+        .nav-links a {
+
+            position: relative;
+
+            color: #b9c8d9;
+
+            text-decoration: none;
+
+            font-size: 14px;
+
+            font-weight: 550;
+
+            transition: color .2s ease;
+
+        }
+
+        .nav-links a::after {
+
+            content: "";
+
+            position: absolute;
+
+            left: 0;
+
+            right: 100%;
+
+            bottom: -7px;
+
+            height: 2px;
+
+            border-radius: 10px;
+
+            background: var(--blue);
+
+            transition: right .25s ease;
+
+        }
+
+        .nav-links a:hover {
+
+            color: var(--blue);
+
+        }
+
+        .nav-links a:hover::after {
+
+            right: 0;
+
+        }
+
+        .primary {
+
+            color: #06111c;
+
+            background: linear-gradient(135deg, #b4e8ff, #68c8ff);
+
+            box-shadow: 0 0 0 rgba(80, 191, 255, 0);
+
+        }
+
+        .primary:hover {
+
+            transform: translateY(-2px);
+
+            box-shadow: 0 8px 28px rgba(155, 105, 255, 0.30);
+
+            background: linear-gradient(135deg, #d1f1ff, #8dd8ff);
+
+        }
+
+        .secondary {
+
+            color: var(--blue);
+
+            background: rgba(141, 216, 255, 0.045);
+
+            border-color: rgba(184, 154, 255, 0.32);
+
+        }
+
+        .secondary:hover {
+
+            transform: translateY(-2px);
+
+            background: rgba(141, 216, 255, 0.12);
+
+            border-color: var(--blue);
+
+            box-shadow: 0 0 22px rgba(80, 191, 255, 0.12);
+
+        }
+
+        /* Hero */
+
+        .hero {
+
+            position: relative;
+
+            isolation: isolate;
+
+            padding: 100px 20px 86px;
+
+            text-align: center;
+
+            overflow: hidden;
+
+            background:
+
+                radial-gradient(ellipse at 50% 12%, rgba(58, 160, 224, 0.19), transparent 48%),
+
+                linear-gradient(180deg, rgba(10, 19, 32, 0.75), rgba(7, 11, 18, 0.08));
+
+        }
+
+        .hero::before,
+
+        .hero::after {
+
+            content: "";
+
+            position: absolute;
+
+            z-index: -1;
+
+            width: 270px;
+
+            height: 270px;
+
+            border-radius: 50%;
+
+            filter: blur(85px);
+
+            opacity: .28;
+
+            pointer-events: none;
+
+            animation: floatGlow 9s ease-in-out infinite alternate;
+
+        }
+
+        .hero::before {
+
+            background: #167dc2;
+
+            top: 20px;
+
+            left: -100px;
+
+        }
+
+        .hero::after {
+
+            background: #2ab8e9;
+
+            right: -100px;
+
+            bottom: -80px;
+
+            animation-delay: -4s;
+
+        }
+
+        .tag {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            padding: 8px 14px;
+
+            border: 1px solid rgba(141, 216, 255, 0.25);
+
+            border-radius: 999px;
+
+            background: rgba(141, 216, 255, 0.07);
+
+            color: var(--blue);
+
+            font-size: 12px;
+
+            font-weight: 750;
+
+            letter-spacing: 1.5px;
+
+            text-transform: uppercase;
+
+            margin-bottom: 24px;
+
+            animation: fadeUp .7s both;
+
+        }
+
+        .tag::before {
+
+            content: "";
+
+            width: 7px;
+
+            height: 7px;
+
+            border-radius: 50%;
+
+            background: var(--blue);
+
+            box-shadow: 0 0 12px var(--blue);
+
+        }
+
+        .hero h1 {
+
+            font-size: clamp(39px, 6vw, 76px);
+
+            line-height: 1.08;
+
+            letter-spacing: -2.8px;
+
+            font-weight: 850;
+
+            margin-bottom: 23px;
+
+            animation: fadeUp .8s .08s both;
+
+        }
+
+        .hero h1 span {
+
+            display: inline-block;
+
+            color: var(--blue);
+
+            text-shadow: 0 0 34px rgba(80, 191, 255, 0.22);
+
+        }
+
+        .hero p {
+
+            max-width: 620px;
+
+            margin: 0 auto 30px;
+
+            color: var(--muted);
+
+            font-size: 16px;
+
+            line-height: 1.85;
+
+            animation: fadeUp .8s .16s both;
+
+        }
+
+        .hero-buttons {
+
+            display: flex;
+
+            justify-content: center;
+
+            gap: 13px;
+
+            flex-wrap: wrap;
+
+            animation: fadeUp .8s .24s both;
+
+        }
+
+        .hero-buttons button {
+
+            min-height: 48px;
+
+            padding: 13px 22px;
+
+        }
+
+        /* Search */
+
+        .search-box {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 8px;
+
+            max-width: 660px;
+
+            margin: 34px auto 0;
+
+            padding: 8px;
+
+            background: rgba(15, 26, 42, 0.88);
+
+            border: 1px solid rgba(141, 216, 255, 0.24);
+
+            border-radius: 16px;
+
+            box-shadow: 0 14px 50px rgba(0, 0, 0, 0.2), 0 0 30px rgba(80, 191, 255, 0.07);
+
+            transition: border-color .25s ease, box-shadow .25s ease, transform .25s ease;
+
+            animation: fadeUp .8s .32s both;
+
+        }
+
+        .search-box:focus-within {
+
+            border-color: rgba(141, 216, 255, 0.72);
+
+            box-shadow: 0 0 0 4px rgba(141, 216, 255, 0.07), 0 0 35px rgba(80, 191, 255, 0.14);
+
+        }
+
+        .search-box input {
+
+            flex: 1;
+
+            min-width: 0;
+
+            padding: 13px 14px;
+
+            color: var(--text);
+
+            background: transparent;
+
+            border: none;
+
+            outline: none;
+
+            font: inherit;
+
+            font-size: 14px;
+
+        }
+
+        .search-box input::placeholder {
+
+            color: #71869c;
+
+        }
+
+        .search-btn {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            justify-content: center;
+
+            gap: 8px;
+
+            color: #06111c;
+
+            background: var(--blue);
+
+            white-space: nowrap;
+
+        }
+
+        .search-btn:hover {
+
+            background: #c2edff;
+
+            box-shadow: 0 0 22px rgba(80, 191, 255, .22);
+
+        }
+
+        /* Items */
+
+        .container {
+
+            width: min(1180px, 100%);
+
+            padding: 76px 25px 84px;
+
+            margin: auto;
+
+        }
+
+        .heading {
+
+            margin-bottom: 28px;
+
+        }
+
+        .heading h2,
+
+        .how h2 {
+
+            font-size: clamp(27px, 3.5vw, 36px);
+
+            line-height: 1.2;
+
+            letter-spacing: -1px;
+
+            margin-bottom: 10px;
+
+        }
+
+        .heading p,
+
+        .how-intro {
+
+            color: var(--muted);
+
+            font-size: 15px;
+
+        }
+
+        .filters {
+
+            display: flex;
+
+            flex-wrap: wrap;
+
+            gap: 10px;
+
+            margin-bottom: 27px;
+
+        }
+
+        .filter {
+
+            color: #a9bbce;
+
+            background: #0d1725;
+
+            border: 1px solid #24384c;
+
+            border-radius: 999px;
+
+            padding: 9px 16px;
+
+            font-size: 13px;
+
+        }
+
+        .filter:hover {
+
+            border-color: var(--blue);
+
+            color: var(--blue);
+
+        }
+
+        .filter.active {
+
+            color: #07111c;
+
+            background: var(--blue);
+
+            border-color: var(--blue);
+
+            box-shadow: 0 0 20px rgba(80, 191, 255, .16);
+
+        }
+
+        .cards {
+
+            display: grid;
+
+            grid-template-columns: repeat(3, minmax(0, 1fr));
+
+            gap: 22px;
+
+        }
+
+        .card {
+
+            position: relative;
+
+            min-width: 0;
+
+            overflow: hidden;
+
+            background: linear-gradient(145deg, rgba(18, 31, 48, .98), rgba(10, 18, 30, .98));
+
+            border: 1px solid var(--border);
+
+            border-radius: var(--radius);
+
+            box-shadow: 0 8px 28px rgba(0, 0, 0, .12);
+
+            transition: transform .32s ease, border-color .32s ease, box-shadow .32s ease;
+
+            animation: cardIn .65s both;
+
+        }
+
+        .card:nth-child(2) { animation-delay: .06s; }
+
+        .card:nth-child(3) { animation-delay: .12s; }
+
+        .card:nth-child(4) { animation-delay: .18s; }
+
+        .card:nth-child(5) { animation-delay: .24s; }
+
+        .card:nth-child(6) { animation-delay: .30s; }
+
+        .card::before {
+
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            opacity: 0;
+
+            pointer-events: none;
+
+            background: radial-gradient(circle at 50% 0%, rgba(141, 216, 255, .12), transparent 65%);
+
+            transition: opacity .3s ease;
+
+        }
+
+        .card:hover {
+
+            transform: translateY(-7px);
+
+            border-color: rgba(141, 216, 255, .55);
+
+            box-shadow: 0 18px 42px rgba(0, 0, 0, .25), 0 0 26px rgba(80, 191, 255, .10);
+
+        }
+
+        .card:hover::before {
+
+            opacity: 1;
+
+        }
+
+        
+.item-image {
+    position: relative;
+    height: 200px;
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    overflow: hidden;
+    font-size: 67px;
+
+    background:
+        radial-gradient(circle, rgba(141, 216, 255, .14), transparent 58%),
+        #0e1c2d;
+
+    border-bottom: 1px solid rgba(141, 216, 255, .10);
+    transition: background .3s ease;
+}
+
+/* Uploaded image */
+.item-image img {
+    width: 100%;
+    height: 100%;
+    object-fit: contain;
+    display: block;
+}
+
+
+        .card:hover .item-image {
+
+            background:
+
+                radial-gradient(circle, rgba(141, 216, 255, .22), transparent 60%),
+
+                #10243a;
+
+        }
+
+        .card:nth-child(3n + 2) .item-image,
+
+        .card:nth-child(3n) .item-image {
+
+            background:
+
+                radial-gradient(circle, rgba(141, 216, 255, .12), transparent 58%),
+
+                #0e1c2d;
+
+        }
+
+        .card-content {
+
+            position: relative;
+
+            padding: 21px;
+
+        }
+
+        .badge {
+
+            display: inline-flex;
+
+            align-items: center;
+
+            padding: 5px 11px;
+
+            border-radius: 999px;
+
+            font-size: 11px;
+
+            font-weight: 800;
+
+            letter-spacing: .4px;
+
+            margin-bottom: 12px;
+
+            text-transform: uppercase;
+
+        }
+
+        .lost {
+
+            color: #ffbd9c;
+
+            background: rgba(255, 139, 89, .12);
+
+            border: 1px solid rgba(255, 139, 89, .2);
+
+        }
+
+        .found {
+
+            color: #8ff0c0;
+
+            background: rgba(72, 211, 143, .10);
+
+            border: 1px solid rgba(72, 211, 143, .2);
+
+        }
+
+        .card h3 {
+
+            margin-bottom: 12px;
+
+            font-size: 19px;
+
+            letter-spacing: -.3px;
+
+        }
+
+        .details {
+
+            display: flex;
+
+            align-items: center;
+
+            gap: 7px;
+
+            color: var(--muted);
+
+            font-size: 13px;
+
+            margin-bottom: 8px;
+
+        }
+
+        .details svg {
+
+            flex-shrink: 0;
+
+            color: #80cfff;
+
+        }
+
+        .card-footer {
+
+            border-top: 1px solid rgba(141, 216, 255, .12);
+
+            margin-top: 18px;
+
+            padding-top: 16px;
+
+        }
+
+        .card-footer button {
+
+            width: 100%;
+
+            font-size: 13px;
+
+        }
+
+        .empty {
+
+            display: none;
+
+            padding: 35px 20px;
+
+            text-align: center;
+
+            color: var(--muted);
+
+            background: rgba(16, 27, 43, .65);
+
+            border: 1px dashed rgba(141, 216, 255, .25);
+
+            border-radius: 16px;
+
+            margin-top: 20px;
+
+        }
+
+        /* How it works */
+
+        .how {
+
+            position: relative;
+
+            padding: 78px 25px;
+
+            text-align: center;
+
+            background: linear-gradient(180deg, rgba(12, 22, 36, .72), rgba(7, 11, 18, .95));
+
+            border-top: 1px solid rgba(141, 216, 255, .10);
+
+            border-bottom: 1px solid rgba(141, 216, 255, .10);
+
+        }
+
+        .how h2 {
+
+            margin-bottom: 12px;
+
+        }
+
+        .how-intro {
+
+            margin-bottom: 36px;
+
+        }
+
+        .steps {
+
+            display: grid;
+
+            grid-template-columns: repeat(3, 1fr);
+
+            gap: 22px;
+
+            max-width: 1060px;
+
+            margin: auto;
+
+        }
+
+        .step {
+
+            padding: 30px 24px;
+
+            background: linear-gradient(145deg, rgba(18, 31, 48, .88), rgba(10, 18, 30, .88));
+
+            border: 1px solid var(--border);
+
+            border-radius: 18px;
+
+            transition: transform .3s ease, border-color .3s ease, box-shadow .3s ease;
+
+        }
+
+        .step:hover {
+
+            transform: translateY(-5px);
+
+            border-color: rgba(141, 216, 255, .48);
+
+            box-shadow: var(--glow);
+
+        }
+
+        .step .icon {
+
+            display: inline-flex;
+
+            width: 64px;
+
+            height: 64px;
+
+            align-items: center;
+
+            justify-content: center;
+
+            font-size: 32px;
+
+            margin-bottom: 17px;
+
+            border-radius: 18px;
+
+            background: rgba(141, 216, 255, .09);
+
+            border: 1px solid rgba(141, 216, 255, .18);
+
+        }
+
+        .step h3 {
+
+            font-size: 17px;
+
+        }
+
+        .step p {
+
+            color: var(--muted);
+
+            font-size: 14px;
+
+            margin-top: 9px;
+
+            line-height: 1.75;
+
+        }
+
+        /* Footer */
+
+        footer {
+
+            padding: 36px 20px;
+
+            background: #05080e;
+
+            color: var(--text);
+
+            text-align: center;
+
+        }
+
+        footer .logo {
+
+            justify-content: center;
+
+            font-size: 23px;
+
+        }
+
+        footer p {
+
+            color: #8da0b6;
+
+            margin-top: 7px;
+
+            font-size: 13px;
+
+        }
+
+        /* Motion */
+
+        @keyframes fadeUp {
+
+            from { opacity: 0; transform: translateY(18px); }
+
+            to { opacity: 1; transform: translateY(0); }
+
+        }
+
+        @keyframes cardIn {
+
+            from { opacity: 0; transform: translateY(14px); }
+
+            to { opacity: 1; transform: translateY(0); }
+
+        }
+
+        @keyframes floatGlow {
+
+            from { transform: translate3d(0, 0, 0) scale(1); }
+
+            to { transform: translate3d(24px, -18px, 0) scale(1.12); }
+
+        }
+
+        /* Extra premium animations */
+
+        .hero h1 span {
+
+            background: linear-gradient(90deg, #9c7bff, #f0eaff, #c29cff, #9c7bff);
+
+            background-size: 240% auto;
+
+            -webkit-background-clip: text;
+
+            background-clip: text;
+
+            -webkit-text-fill-color: transparent;
+
+            animation: textShimmer 6s linear infinite;
+
+        }
+
+        .hero-buttons button,
+
+        .search-btn {
+
+            position: relative;
+
+            overflow: hidden;
+
+        }
+
+        .hero-buttons button::after,
+
+        .search-btn::after {
+
+            content: "";
+
+            position: absolute;
+
+            inset: -60% auto -60% -40%;
+
+            width: 28%;
+
+            transform: rotate(22deg) translateX(-220%);
+
+            background: linear-gradient(90deg, transparent, rgba(255,255,255,.55), transparent);
+
+            transition: transform .7s ease;
+
+            pointer-events: none;
+
+        }
+
+        .hero-buttons button:hover::after,
+
+        .search-btn:hover::after {
+
+            transform: rotate(22deg) translateX(650%);
+
+        }
+
+        .card {
+
+            transform-style: preserve-3d;
+
+        }
+
+        .card::after {
+
+            content: "";
+
+            position: absolute;
+
+            inset: 0;
+
+            border-radius: inherit;
+
+            padding: 1px;
+
+            pointer-events: none;
+
+            opacity: 0;
+
+            background: linear-gradient(135deg, rgba(184,154,255,.5), transparent 38%, rgba(184,154,255,.18));
+
+            -webkit-mask: linear-gradient(#fff 0 0) content-box, linear-gradient(#fff 0 0);
+
+            -webkit-mask-composite: xor;
+
+            mask-composite: exclude;
+
+            transition: opacity .35s ease;
+
+        }
+
+        .card:hover::after {
+
+            opacity: 1;
+
+        }
+
+        .step .icon {
+
+            transition: transform .35s ease, box-shadow .35s ease;
+
+        }
+
+        .step:hover .icon {
+
+            transform: translateY(-4px) rotate(-5deg) scale(1.06);
+
+            box-shadow: 0 0 24px rgba(155, 105, 255, .22);
+
+        }
+
+        /* Added by JavaScript when sections enter the viewport */
+
+        .reveal {
+
+            opacity: 0;
+
+            transform: translateY(24px);
+
+            transition: opacity .7s ease, transform .7s cubic-bezier(.2,.75,.25,1);
+
+        }
+
+        .reveal.is-visible {
+
+            opacity: 1;
+
+            transform: translateY(0);
+
+        }
+
+        .card.reveal {
+
+            transition:
+
+                opacity .65s ease,
+
+                transform .65s cubic-bezier(.2,.75,.25,1),
+
+                border-color .32s ease,
+
+                box-shadow .32s ease;
+
+        }
+
+        @keyframes textShimmer {
+
+            to { background-position: 240% center; }
+
+        }
+
+        /* Premium dark, purple-glow interface */
+
+        .topbar{width:min(1160px,calc(100% - 40px));
+
+            margin:10px auto 0;padding:13px 20px;border:1px solid #ffffff1a;border-radius:999px;background:#0f0f12c9;box-shadow:0 8px 36px #0003}
+
+        .logo{text-decoration:none;gap:8px}.brand-mark{display:inline-grid;place-items:center;width:34px;height:34px;border-radius:50%;color:white;font-size:25px;background:linear-gradient(145deg,#a68aff,#5b42a8);box-shadow:0 0 24px #9b69ff59}
+
+        .nav-links{gap:clamp(12px,2.2vw,30px)}.nav-links a{color:#e3e0e9;font-size:14px}.nav-chevron{color:#a79bbd;margin-left:4px}
+
+        .nav-tools{display:flex;align-items:center;gap:10px;position:relative}.icon-btn,.avatar-btn{width:39px;height:39px;padding:0;display:grid;place-items:center;border-radius:50%;color:#f4efff;background:transparent;border:1px solid transparent;position:relative}
+
+        .icon-btn:hover,.avatar-btn:hover{background:#ffffff17;border-color:#ffffff1f;transform:translateY(-1px)}.icon-btn svg{width:20px;height:20px;fill:none;stroke:currentColor;stroke-width:1.8;stroke-linecap:round;stroke-linejoin:round}
+
+        .avatar-btn{font-weight:800;background:linear-gradient(135deg,#b59cff,#6750bc);color:white}.notification-dot{position:absolute;width:6px;height:6px;border-radius:50%;background:#bc9bff;top:7px;right:7px;box-shadow:0 0 8px #bc9bff}
+
+        .tool-wrap{position:relative}.mini-popover{position:absolute;top:48px;right:0;z-index:50;width:230px;padding:17px;border-radius:16px;background:#17151e;border:1px solid #bea5ff3d;box-shadow:0 16px 50px #0008;text-align:left;color:#f6f1ff;animation:fadeUp .2s ease both}
+
+        .mini-popover[hidden]{display:none}.mini-popover p{color:#a8a1b5;font-size:13px;margin:7px 0 12px}.popover-action{display:block;width:100%;text-align:left;padding:9px 10px;margin-top:5px;background:#ffffff0d;color:#eee7ff;border:1px solid #ffffff14;font-size:12px}.popover-action:hover{background:#a07bff26}
+
+        .mobile-menu{display:none}body{background:radial-gradient(ellipse at 50% 34%,#7b4cbe38,transparent 30%),radial-gradient(ellipse at 10% 5%,#5b3d8c1a,transparent 35%),#0b0b0e}
+
+        .hero{padding-top:88px;padding-bottom:85px}.hero::before{width:min(850px,90vw);height:600px;top:55px;background:radial-gradient(ellipse,#905bda61,#60399721 38%,transparent 70%)}.hero::after{width:1200px;height:780px;border:1px solid #bea5ff21;border-radius:50%;top:160px}
+
+        .tag{border:1px solid #ffffff14;background:#ffffff12;color:#e9e3f2}.tag-dot{display:inline-block;width:7px;height:7px;margin-right:7px;border-radius:50%;background:#b99aff;box-shadow:0 0 12px #a27cff}
+
+        .hero h1{max-width:850px;margin-inline:auto;font-size:clamp(42px,5.4vw,68px)}.hero p{max-width:740px}
+
+        .primary,.search-btn{color:white;background:linear-gradient(115deg,#6e69e8,#ad78e8);box-shadow:0 8px 28px #8661e02e}.primary:hover,.search-btn:hover{background:linear-gradient(115deg,#817cff,#bd8aff);box-shadow:0 8px 28px #9b69ff4d}
+
+        .secondary{color:#e6dcff;background:#ffffff0b;border-color:#bea5ff47}.secondary:hover{background:#a07bff21;border-color:#b89aff}
+
+        .search-box{border-color:#bea5ff38;background:#121117e0}.card{background:linear-gradient(145deg,#191720f5,#0e0e12f5);border-color:#ffffff17}.card:hover{border-color:#b491ff73;box-shadow:0 18px 45px #0005,0 0 25px #905bda1f}
+
+        .orbit-chip{position:absolute;z-index:2;width:56px;height:50px;padding:0;display:grid;place-items:center;color:#b89aff;background:linear-gradient(145deg,#2a2731f2,#16151af2);border:1px solid #ffffff17;border-radius:13px;box-shadow:0 10px 28px #0005,inset 0 1px #ffffff0f;animation:floatChip 4s ease-in-out infinite alternate}
+
+        .orbit-chip svg{width:23px;height:23px;fill:none;stroke:currentColor;stroke-width:1.7;stroke-linecap:round;stroke-linejoin:round}.orbit-chip:hover{border-color:#b89aff;box-shadow:0 0 25px #9b69ff4d;transform:translateY(-4px) scale(1.04)}
+
+        .orbit-one{right:17%;top:26%}.orbit-two{right:23%;top:56%;animation-delay:-1.5s}.orbit-three{left:7%;top:64%;animation-delay:-2.5s}
+
+        @keyframes floatChip{from{translate:0 0}to{translate:0 -9px}}
+
+        body.light-mode{--bg:#f5f2fb;--bg-soft:#fff;--surface:#ffffffe6;--surface-solid:#fff;--surface-hover:#f1eaff;--text:#211b2d;--muted:#6e667b;background:radial-gradient(ellipse at 50% 30%,#e6d9ff,transparent 38%),#f7f5fb;color:var(--text)}
+
+        body.light-mode nav,body.light-mode .topbar{background:#ffffffdf;border-color:#50327820}body.light-mode .nav-links a,body.light-mode .icon-btn{color:#332844}body.light-mode .card,body.light-mode .search-box{background:#ffffffe6}body.light-mode .hero p,body.light-mode .heading p{color:#62596f}body.light-mode .mini-popover{background:#fff;color:#2b203b}body.light-mode .mini-popover p{color:#6e667b}
+
+        @media(max-width:800px){.topbar{width:calc(100% - 24px);border-radius:24px;flex-wrap:wrap}.nav-tools{margin-left:auto}.nav-links{order:3;width:100%;justify-content:center}.orbit-one{right:5%;top:22%}.orbit-two{right:7%;top:68%}.orbit-three{left:4%;top:68%}}
+
+        @media(max-width:560px){.topbar{padding:10px 13px;gap:10px}.nav-links{display:none;flex-direction:column;align-items:flex-start;padding:12px;background:#191621;border-radius:16px}.nav-links.menu-open{display:flex}.nav-report{display:none}.mobile-menu{display:grid}.icon-btn,.avatar-btn{width:34px;height:34px}.hero{padding-top:56px}.orbit-chip{width:42px;height:40px}.orbit-one{right:4%;top:17%}.orbit-two{right:4%;top:73%}.orbit-three{left:4%;top:73%}}
+
+        /* Responsive */
+
+        @media (max-width: 800px) {
+
+            nav { padding: 15px 5%; }
+
+            .nav-links { gap: 14px; }
+
+            .cards { grid-template-columns: repeat(2, minmax(0, 1fr)); }
+
+            .hero { padding-top: 80px; }
+
+        }
+
+        @media (max-width: 560px) {
+
+            nav {
+
+                padding: 14px 5%;
+
+                flex-wrap: wrap;
+
+                gap: 14px;
+
+            }
+
+            .logo { font-size: 23px; }
+
+            .nav-links {
+
+                width: 100%;
+
+                justify-content: space-between;
+
+                gap: 10px;
+
+                flex-wrap: wrap;
+
+            }
+
+            .nav-links a { font-size: 12px; }
+
+            .nav-links button { padding: 10px 12px; font-size: 12px; }
+
+            .hero { padding: 64px 17px 55px; }
+
+            .hero h1 { letter-spacing: -1.7px; }
+
+            .hero p { font-size: 14px; }
+
+            .search-box { flex-wrap: wrap; }
+
+            .search-box input { flex-basis: 100%; padding: 12px; }
+
+            .search-box button { width: 100%; }
+
+            .container { padding: 55px 17px 62px; }
+
+            .cards, .steps { grid-template-columns: 1fr; }
+
+            .item-image { height: 165px; }
+
+            .how { padding: 60px 17px; }
+
+        }
+
+        @media (prefers-reduced-motion: reduce) {
+
+            *, *::before, *::after {
+
+                scroll-behavior: auto !important;
+
+                animation-duration: .01ms !important;
+
+                animation-iteration-count: 1 !important;
+
+                transition-duration: .01ms !important;
+
+            }
+
+        }
+
+        /* Information popup */
+    .message-modal {
+        position: fixed;
+        inset: 0;
+        z-index: 9999;
+        background: rgba(0, 0, 0, 0.8);
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        padding: 20px;
+    }
+
+    .message-box {
+    width: 100%;
+    max-width: 450px;
+    padding: 28px;
+    border: 1px solid #263b55;
+    border-radius: 18px;
+    background: #0b1220;
+    color: #ffffff;
+    box-shadow: 0 0 30px rgba(56, 189, 248, 0.15);
+    }
+
+    .message-box h2 {
+        margin-top: 0;
+        color: #7dd3fc;
+    }
+
+#selectedItemName {
+    color: #cbd5e1;
+    margin-bottom: 20px;
+}
+
+#messageForm input,
+#messageForm textarea {
+    display: block;
+    width: 100%;
+    box-sizing: border-box;
+    margin-bottom: 14px;
+    padding: 13px;
+    border: 1px solid #334155;
+    border-radius: 9px;
+    background: #111c2e;
+    color: #ffffff;
+    font: inherit;
+}
+
+#messageForm textarea {
+    min-height: 120px;
+    resize: vertical;
+}
+
+#messageForm button {
+    padding: 11px 16px;
+    margin: 5px 5px 0 0;
+    border: 0;
+    border-radius: 8px;
+    cursor: pointer;
+}
+
+#messageForm button[type="submit"] {
+    background: #38bdf8;
+    color: #07111f;
+    font-weight: bold;
+}
+
+#closeMessageModal {
+    background: #263449;
+    color: #ffffff;
+}
+
+#messageStatus {
+    overflow-wrap: anywhere;
+}
+
+    </style>
+
+</head>
+
+<body>
+
+    <!-- Premium navbar with functional icons -->
+
+    <nav class="topbar">
+
+        <a class="logo" href="#home" aria-label="Lost2Found home"><span class="brand-mark">✦</span> Lost<span>2Found</span></a>
+
+        <div class="nav-links" id="navLinks">
+
+            <a href="#home">Home <span class="nav-chevron">⌄</span></a>
+
+            <a href="#items">Explore <span class="nav-chevron">⌄</span></a>
+
+            <a href="#how">How It Works <span class="nav-chevron">⌄</span></a>
+
+            <a href="#items">Community</a>
+
+        </div>
+
+        <div class="nav-tools">
+
+           <a href="login.html" class="secondary" id="loginLink">Login</a>
+
+        <a href="signup.html" class="primary" id="signupLink">Sign Up</a>
+
+        <a href="profile.html" class="secondary" id="profileLink" hidden>
+                 My Profile
+        </a>
+
+        <button class="secondary" id="logoutBtn" hidden>
+    Logout
+</button>
+            <button class="icon-btn" id="themeToggle" title="Toggle light/dark theme" aria-label="Toggle theme"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="4"/><path d="M12 2v2m0 16v2M4.93 4.93l1.42 1.42m11.3 11.3 1.42 1.42M2 12h2m16 0h2M4.93 19.07l1.42-1.42m11.3-11.3 1.42-1.42"/></svg></button>
+
+            <div class="tool-wrap">
+
+                <button class="icon-btn" id="notificationToggle" title="Notifications" aria-label="Open notifications"><svg viewBox="0 0 24 24"><path d="M18 8a6 6 0 0 0-12 0c0 7-3 7-3 9h18c0-2-3-2-3-9"/><path d="M10 21h4"/></svg><span class="notification-dot"></span></button>
+
+                <div class="mini-popover" id="notificationPanel" hidden><strong>Notifications</strong><p>You’re all caught up.</p><button class="popover-action" id="markRead">Mark as read</button></div>
+
+            </div>
+
+            <div class="tool-wrap">
+
+                <button class="avatar-btn" id="profileToggle" title="Profile menu" aria-label="Open profile menu">L</button>
+
+                <div class="mini-popover profile-panel" id="profilePanel" hidden><strong>Welcome to Lost2Found</strong><p>Community member</p><button class="popover-action" onclick="reportItem('Lost')">Report an item</button><button class="popover-action" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})">Help & how it works</button></div>
+
+            </div>
+
+            <button class="primary nav-report" onclick="reportItem('Lost')">+ Report Item</button>
+
+            <button class="icon-btn mobile-menu" id="mobileMenu" title="Toggle menu" aria-label="Toggle navigation">☰</button>
+
+        </div>
+
+    </nav>
+
+    <!-- Hero -->
+
+    <section class="hero" id="home">
+
+        <div class="tag"><span class="tag-dot"></span> A community that brings things back</div>
+
+        <button class="orbit-chip orbit-one" onclick="document.getElementById('items').scrollIntoView({behavior:'smooth'})" aria-label="Explore reported items" title="Explore reported items"><svg viewBox="0 0 24 24"><path d="m9 18-6-6 6-6M15 6l6 6-6 6"/></svg></button>
+
+        <button class="orbit-chip orbit-two" onclick="reportItem('Found')" aria-label="Report a found item" title="Report a found item"><svg viewBox="0 0 24 24"><path d="M4 5h16v12H4zM8 21h8M12 17v4"/><path d="m8 11 2.5 2.5L16 8"/></svg></button>
+
+        <button class="orbit-chip orbit-three" onclick="document.getElementById('how').scrollIntoView({behavior:'smooth'})" aria-label="Learn how it works" title="Learn how it works"><svg viewBox="0 0 24 24"><circle cx="12" cy="12" r="9"/><path d="M9.5 9a2.5 2.5 0 1 1 4.2 1.8c-1.2 1-1.7 1.4-1.7 3M12 17h.01"/></svg></button>
+
+        <h1>Lost something?<br>
+
+            <span>Let's find it together.</span>
+
+        </h1>
+
+        <p>
+
+            Lost2Found connects people who have lost belongings
+
+            with people who have found them. Together, we can
+
+            help every lost item find its way home.
+
+        </p>
+
+        <div class="hero-buttons">
+
+            <button class="primary" onclick="reportItem('Lost')">
+
+                Report Lost Item
+
+            </button>
+
+            <button class="secondary" onclick="reportItem('Found')">
+
+                Report Found Item
+
+            </button>
+
+        </div>
+
+        <div class="search-box">
+
+            <input id="searchInput" type="text"
+
+                placeholder="Search wallet, phone, keys..."
+
+                aria-label="Search items">
+
+<button class="search-btn" onclick="filterItems(); 
+document.getElementById('items').scrollIntoView({behavior:'smooth'});">
+
+    <svg xmlns="http://www.w3.org/2000/svg"
+
+         width="18" height="18"
+
+         viewBox="0 0 24 24"
+
+         fill="none"
+
+         stroke="currentColor"
+
+         stroke-width="2"
+
+         stroke-linecap="round"
+
+         stroke-linejoin="round"
+
+         aria-hidden="true">
+
+        <circle cx="11" cy="11" r="8"></circle>
+
+        <path d="m21 21-4.35-4.35"></path>
+
+    </svg>
+
+    Search
+
+</button>
+
+        </div>
+
+    </section>
+
+    <!-- Browse items -->
+
+    <main class="container" id="items">
+        <div id="reportFormArea" hidden></div>
+
+        <div class="heading">
+
+            <h2>Recently Reported Items</h2>
+
+            <p>Browse the latest lost and found reports.</p>
+
+        </div>
+
+        <div class="filters">
+
+            <button class="filter active"
+
+                data-filter="All" onclick="setFilter('All', this)">
+
+                All Items
+
+            </button>
+
+            <button class="filter"
+
+                data-filter="Lost" onclick="setFilter('Lost', this)">
+
+                Lost Items
+
+            </button>
+
+            <button class="filter"
+
+                data-filter="Found" onclick="setFilter('Found', this)">
+
+                Found Items
+
+            </button>
+
+        </div>
+
+        <div class="cards" id="itemsGrid">
+
+            <article class="card" data-type="Lost">
+
+                <div class="item-image">🎒</div>
+
+                <div class="card-content">
+
+                    <span class="badge lost">Lost</span>
+
+                    <h3>Blue Backpack</h3>
+
+<p class="details">
+
+    <svg xmlns="http://www.w3.org/2000/svg"
+
+         width="16" height="16"
+
+         viewBox="0 0 24 24"
+
+         fill="none" stroke="currentColor"
+
+         stroke-width="2"
+
+         style="vertical-align: middle;">
+
+        <path d="M20 10c0 5-8 12-8 12S4 15 4 10a8 8 0 1 1 16 0Z"/>
+
+        <circle cx="12" cy="10" r="2.5"/>
+
+    </svg>
+
+    College Library
+
+</p>
+
+<p class="details">
+
+    <svg xmlns="http://www.w3.org/2000/svg"
+
+         width="16" height="16"
+
+         viewBox="0 0 24 24"
+
+         fill="none" stroke="currentColor"
+
+         stroke-width="2"
+
+         style="vertical-align: middle;">
+
+        <rect x="3" y="5" width="18" height="16" rx="2"/>
+
+        <path d="M16 3v4M8 3v4M3 11h18"/>
+
+    </svg>
+
+    October 8, 2026
+
+</p>
+
+                    <div class="card-footer">
+
+                        <button class="secondary"
+
+                            onclick="contactOwner('Blue Backpack')">
+
+                            I Have Information
+
+                        </button>
+
+                        <button class="secondary"
+                            onclick="window.location.href='item-details.html?name=Blue%20Backpack'">
+                            View Details
+                        </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            <article class="card" data-type="Found">
+
+                <div class="item-image">👛</div>
+
+                <div class="card-content">
+
+                    <span class="badge found">Found</span>
+
+                    <h3>Brown Wallet</h3>
+
+                    <p class="details">📍 City Park</p>
+
+                    <p class="details">📅 October 9, 2026</p>
+
+                    <div class="card-footer">
+
+                        <button class="secondary"
+
+                            onclick="contactOwner('Brown Wallet')">
+
+                            I Have Information
+
+                        </button>
+
+                        <button class="secondary"
+                        onclick="window.location.href='item-details.html?name=Brown%20Wallet'">
+                        View Details
+                    </button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            <article class="card" data-type="Lost">
+
+                <div class="item-image">🎧</div>
+
+                <div class="card-content">
+
+                    <span class="badge lost">Lost</span>
+
+                    <h3>Wireless Headphones</h3>
+
+                    <p class="details">📍 Bus Station</p>
+
+                    <p class="details">📅 October 10, 2026</p>
+
+                    <div class="card-footer">
+
+                        <button class="secondary"
+
+                            onclick="contactOwner('Wireless Headphones')">
+
+                            I Have Information
+
+                        </button>
+
+                        <button class="secondary"
+                onclick="window.location.href='item-details.html?name=Wireless%20Headphones'">
+    View Details
+</button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            <article class="card" data-type="Found">
+
+                <div class="item-image">🔑</div>
+
+                <div class="card-content">
+
+                    <span class="badge found">Found</span>
+
+                    <h3>Set of Keys</h3>
+
+                    <p class="details">📍 Coffee Shop</p>
+
+                    <p class="details">📅 October 10, 2026</p>
+
+                    <div class="card-footer">
+
+                        <button class="secondary"
+
+                            onclick="contactOwner('Set of Keys')">
+
+                            I Have Information
+
+                        </button>
+                        <button class="secondary"
+                        onclick="window.location.href='item-details.html?name=Set%20of%20Keys'">
+    View Details
+</button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            <article class="card" data-type="Lost">
+
+                <div class="item-image">📱</div>
+
+                <div class="card-content">
+
+                    <span class="badge lost">Lost</span>
+
+                    <h3>Mobile Phone</h3>
+
+                    <p class="details">📍 Shopping Mall</p>
+
+                    <p class="details">📅 October 10, 2026</p>
+
+                    <div class="card-footer">
+
+                        <button class="secondary"
+
+                            onclick="contactOwner('Mobile Phone')">
+
+                            I Have Information
+
+                        </button>
+
+                        <button class="secondary"
+    onclick="window.location.href='item-details.html?name=Mobile%20Phone'">
+    View Details
+</button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+            <article class="card" data-type="Found">
+
+                <div class="item-image">📒</div>
+
+                <div class="card-content">
+
+                    <span class="badge found">Found</span>
+
+                    <h3>Notebook</h3>
+
+                    <p class="details">📍 Classroom</p>
+
+                    <p class="details">📅 October 11, 2026</p>
+
+                    <div class="card-footer">
+
+                        <button class="secondary"
+
+                            onclick="contactOwner('Notebook')">
+
+                            I Have Information
+
+                        </button>
+
+                        <button class="secondary"
+    onclick="window.location.href='item-details.html?name=Notebook'">
+    View Details
+</button>
+
+                    </div>
+
+                </div>
+
+            </article>
+
+        </div>
+
+        <p class="empty" id="emptyMessage">
+
+            No matching items found. Try another search.
+
+        </p>
+
+    </main>
+
+    <!-- How it works -->
+
+    <section class="how" id="how">
+
+        <h2>How It Works</h2>
+
+        <p class="how-intro">
+
+            Three simple steps to help reunite people with their belongings.
+
+        </p>
+
+        <div class="steps">
+
+            <div class="step">
+
+                <div class="icon">📝</div>
+
+                <h3>1. Report an Item</h3>
+
+                <p>Tell the community what you lost or found.</p>
+
+            </div>
+
+            <div class="step">
+
+                <div class="icon">🔎</div>
+
+                <h3>2. Search Items</h3>
+
+                <p>Browse reports and look for a matching item.</p>
+
+            </div>
+
+            <div class="step">
+
+                <div class="icon">🤝</div>
+
+                <h3>3. Reconnect</h3>
+
+                <p>Help return belongings to their rightful owners.</p>
+
+            </div>
+
+        </div>
+
+    </section>
+
+    <!-- Footer -->
+
+    <footer>
+
+        <div class="logo" style="color:white;">Lost2Found</div>
+
+        <p>Helping lost belongings find their way home.</p>
+
+        <p>© 2026 Lost2Found | Learning Project</p>
+
+    </footer>
+
+    <script>
+
+        let currentFilter = "All";
+
+        // Search items
+
+        function filterItems() {
+
+            const query = document
+
+                .getElementById("searchInput")
+
+                .value.toLowerCase().trim();
+
+            const cards = document.querySelectorAll(".card");
+
+            let visibleCount = 0;
+
+            cards.forEach(function(card) {
+
+                const text = card.innerText.toLowerCase();
+
+                const type = card.dataset.type;
+
+                const matchesText = text.includes(query);
+
+                const matchesType =
+
+                    currentFilter === "All" ||
+
+                    type === currentFilter;
+
+                if (matchesText && matchesType) {
+
+                    card.style.display = "";
+
+                    visibleCount++;
+
+                } else {
+
+                    card.style.display = "none";
+
+                }
+
+            });
+
+            document.getElementById("emptyMessage").style.display =
+
+                visibleCount === 0 ? "block" : "none";
+
+        }
+
+        // Change filter
+
+        function setFilter(filter, button) {
+
+            currentFilter = filter;
+
+            document.querySelectorAll(".filter").forEach(function(item) {
+
+                item.classList.remove("active");
+
+            });
+
+            button.classList.add("active");
+
+            filterItems();
+
+        }
+
+        // Search while typing
+
+        document.getElementById("searchInput")
+
+            .addEventListener("input", filterItems);
+
+        // Add a report card
+
+        
+ function reportItem(type) {
+    if (type === "Lost") {
+        window.location.href = "report-lost.html";
+    } else {
+        window.location.href = "found-report.html";
+    }
+}
+
+        // Load saved items from the backend when the page opens
+        async function loadBackendItems() {
+            const grid = document.getElementById("itemsGrid");
+
+            try {
+                const response = await fetch("http://localhost:3000/api/items");
+                if (!response.ok) {
+                    throw new Error("Could not load items from backend");
+                }
+
+                const items = await response.json();
+
+                items.forEach(function(item) {
+                    // Avoid duplicating a card that is already present
+                    const alreadyExists = Array.from(grid.querySelectorAll(".card h3"))
+                        .some(function(heading) {
+                            const card = heading.closest(".card");
+                            const place = card ? card.querySelector(".details") : null;
+                            return heading.textContent === item.name &&
+                                card.dataset.type === item.status &&
+                                place && place.textContent.includes(item.location);
+                        });
+
+                    if (alreadyExists) return;
+
+                    const card = document.createElement("article");
+                    card.className = "card";
+                    card.dataset.type = item.status;
+
+                    const image = document.createElement("div");
+                    image.className = "item-image";
+
+
+                    
+if (item.image) {
+    const img = document.createElement("img");
+    img.src = "http://localhost:3000" + item.image;
+    img.alt = item.name;
+    img.style.width = "100%";
+    img.style.height = "100%";
+    img.style.objectFit = "cover";
+    img.style.display = "block";
+    image.appendChild(img);
+} else {
+    image.textContent = item.status === "Lost" ? "🔎" : "📦";
+}
+
+                    const content = document.createElement("div");
+                    content.className = "card-content";
+
+                    const badge = document.createElement("span");
+                    badge.className = "badge " + (item.status === "Lost" ? "lost" : "found");
+                    badge.textContent = item.status;
+
+                    const heading = document.createElement("h3");
+                    heading.textContent = item.name;
+
+                    const place = document.createElement("p");
+                    place.className = "details";
+                    place.textContent = "📍 " + item.location;
+
+                    const date = document.createElement("p");
+                    date.className = "details";
+                    date.textContent = "📅 Saved item";
+
+                    const footer = document.createElement("div");
+                    footer.className = "card-footer";
+                    const button = document.createElement("button");
+                    button.className = "secondary";
+                    button.textContent = "I Have Information";
+                    button.addEventListener("click", function() {
+                        contactOwner(item._id, item.name);
+                    });
+
+                    const detailsButton = document.createElement("button");
+
+                    detailsButton.className = "secondary";
+                    detailsButton.textContent = "View Details";
+
+                    detailsButton.addEventListener("click", function() {
+                        window.location.href =
+                            "item-details.html?id=" + encodeURIComponent(item._id);
+                    });
+
+                    footer.appendChild(detailsButton);
+
+                    footer.appendChild(button);
+                    content.append(badge, heading, place, date, footer);
+                    card.append(image, content);
+                    grid.prepend(card);
+                });
+
+                filterItems();
+            } catch (error) {
+                console.error("Could not load backend items:", error);
+            }
+        }
+
+
+        // Open information popup
+function contactOwner(itemId, name) {
+    const modal = document.getElementById("messageModal");
+
+    document.getElementById("selectedItemName").textContent =
+        "Item: " + name;
+
+    document.getElementById("messageStatus").textContent = "";
+
+    document.getElementById("messageForm").reset();
+
+    modal.style.display = "flex";
+
+    // Store selected item ID
+    modal.dataset.itemId = itemId;
+
+
+}
+
+    // Check login status
+const token = localStorage.getItem("token");
+
+const loginLink = document.getElementById("loginLink");
+const signupLink = document.getElementById("signupLink");
+const profileLink = document.getElementById("profileLink");
+
+const logoutBtn = document.getElementById("logoutBtn");
+
+if (token) {
+    loginLink.hidden = true;
+    signupLink.hidden = true;
+    profileLink.hidden = false;
+    logoutBtn.hidden = false;
+} else {
+    loginLink.hidden = false;
+    signupLink.hidden = false;
+    profileLink.hidden = true;
+    logoutBtn.hidden = true;
+}
+
+// Logout functionality
+logoutBtn.addEventListener("click", function() {
+    localStorage.removeItem("token");
+    localStorage.removeItem("user");
+
+    alert("Logged out successfully!");
+
+    window.location.href = "index.html";
+});
+
+
+
+        // Header icons: theme, notifications, profile, and mobile menu
+
+        const themeToggle = document.getElementById("themeToggle");
+
+        themeToggle.addEventListener("click", function() {
+
+            document.body.classList.toggle("light-mode");
+
+            const isLight = document.body.classList.contains("light-mode");
+
+            themeToggle.title = isLight ? "Switch to dark theme" : "Switch to light theme";
+
+        });
+
+        const notificationToggle = document.getElementById("notificationToggle");
+
+        const notificationPanel = document.getElementById("notificationPanel");
+
+        const profileToggle = document.getElementById("profileToggle");
+
+        const profilePanel = document.getElementById("profilePanel");
+
+        notificationToggle.addEventListener("click", function(event) {
+
+            event.stopPropagation(); notificationPanel.hidden = !notificationPanel.hidden; profilePanel.hidden = true;
+
+        });
+
+        profileToggle.addEventListener("click", function(event) {
+
+            event.stopPropagation(); profilePanel.hidden = !profilePanel.hidden; notificationPanel.hidden = true;
+
+        });
+
+        document.getElementById("markRead").addEventListener("click", function() {
+
+            document.querySelector(".notification-dot").style.display = "none";
+
+            notificationPanel.querySelector("p").textContent = "No unread notifications.";
+
+            this.textContent = "All caught up";
+
+        });
+
+        document.addEventListener("click", function(event) {
+
+            if (!event.target.closest(".tool-wrap")) { notificationPanel.hidden = true; profilePanel.hidden = true; }
+
+        });
+
+        document.getElementById("mobileMenu").addEventListener("click", function() {
+
+            document.getElementById("navLinks").classList.toggle("menu-open");
+
+        });
+
+        // Reveal sections and cards smoothly when they enter the screen.
+
+        const revealTargets = document.querySelectorAll(
+
+            ".heading, .filters, .card, .how h2, .how-intro, .step"
+
+        );
+
+        revealTargets.forEach(function(element, index) {
+
+            element.classList.add("reveal");
+
+            if (element.classList.contains("card")) {
+
+                element.style.transitionDelay = (index % 3) * 80 + "ms";
+
+            }
+
+        });
+
+        if ("IntersectionObserver" in window) {
+
+            const revealObserver = new IntersectionObserver(function(entries, observer) {
+
+                entries.forEach(function(entry) {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add("is-visible");
+
+                        observer.unobserve(entry.target);
+
+                    }
+
+                });
+
+            }, { threshold: 0.12 });
+
+            revealTargets.forEach(function(element) {
+
+                revealObserver.observe(element);
+
+            });
+
+        } else {
+
+            revealTargets.forEach(function(element) {
+
+                element.classList.add("is-visible");
+
+            });
+
+        }
+
+        // Give newly reported cards the same entrance animation.
+
+        const itemGrid = document.getElementById("itemsGrid");
+
+        const cardObserver = ("IntersectionObserver" in window)
+
+            ? new IntersectionObserver(function(entries, observer) {
+
+                entries.forEach(function(entry) {
+
+                    if (entry.isIntersecting) {
+
+                        entry.target.classList.add("is-visible");
+
+                        observer.unobserve(entry.target);
+
+                    }
+
+                });
+
+            }, { threshold: 0.08 })
+
+            : null;
+
+        // Observe any cards added later by the Report Item prompts.
+
+        const gridObserver = new MutationObserver(function(records) {
+
+            records.forEach(function(record) {
+
+                record.addedNodes.forEach(function(node) {
+
+                    if (node.nodeType === 1 && node.classList.contains("card")) {
+
+                        node.classList.add("reveal");
+
+                        if (cardObserver) {
+
+                            cardObserver.observe(node);
+
+                        } else {
+
+                            node.classList.add("is-visible");
+
+                        }
+
+                    }
+
+                });
+
+            });
+
+        });
+
+        gridObserver.observe(itemGrid, { childList: true });
+
+        // Fetch backend items on every page load
+        loadBackendItems();
+
+        // Add a small press feedback to buttons.
+
+        document.querySelectorAll("button").forEach(function(button) {
+
+            button.addEventListener("pointerdown", function() {
+
+                button.style.transform = "scale(0.97)";
+
+            });
+
+            button.addEventListener("pointerup", function() {
+
+                button.style.transform = "";
+
+            });
+
+            button.addEventListener("pointerleave", function() {
+
+                button.style.transform = "";
+
+            });
+
+        });
+
+    </script>
+
+    
+    <!-- Information Message Popup -->
+<div id="messageModal" class="message-modal" style="display: none;">
+    <div class="message-box">
+        <h2>Share Information</h2>
+        <p id="selectedItemName"></p>
+
+        <form id="messageForm">
+            <input
+                type="text"
+                id="senderName"
+                placeholder="Enter your name"
+                required
+            >
+
+            <textarea
+                id="itemMessage"
+                placeholder="Tell us what you know about this item..."
+                maxlength="1000"
+                required
+            ></textarea>
+
+            <button type="submit">Send Information</button>
+            <button type="button" id="closeMessageModal">Cancel</button>
+        </form>
+
+        <p id="messageStatus"></p>
+    </div>
+</div>
+
+<script>
+
+    // Close information popup
+const closeButton = document.getElementById("closeMessageModal");
+
+if (closeButton) {
+    closeButton.addEventListener("click", function() {
+        document.getElementById("messageModal").style.display = "none";
+    });
+}
+
+// Send information message
+const messageForm = document.getElementById("messageForm");
+
+if (messageForm) {
+    messageForm.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const modal = document.getElementById("messageModal");
+        const status = document.getElementById("messageStatus");
+
+        const senderName = document.getElementById("senderName").value.trim();
+        const message = document.getElementById("itemMessage").value.trim();
+        const itemId = modal.dataset.itemId;
+
+        if (!senderName || !message) {
+            status.textContent = "Please fill in both fields.";
+            return;
+        }
+
+        const submitButton = this.querySelector('button[type="submit"]');
+        submitButton.disabled = true;
+        status.textContent = "Sending...";
+
+        try {
+            const response = await fetch("http://localhost:3000/api/messages", {
+                method: "POST",
+                headers: {
+                    "Content-Type": "application/json"
+                },
+                body: JSON.stringify({
+                    itemId: itemId,
+                    senderName: senderName,
+                    message: message
+                })
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || "Could not send message.");
+            }
+
+            status.textContent = "Information sent successfully!";
+            this.reset();
+        } catch (error) {
+            console.error("Message error:", error);
+            status.textContent = error.message || "Could not send message. Please try again.";
+        } finally {
+            submitButton.disabled = false;
+        }
+    });
+}
+</script>
+
+</body>
+
+</html>

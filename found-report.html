@@ -1,0 +1,227 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Report Found Item | Lost2Found</title>
+
+<style>
+    * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            font-family: Arial, sans-serif;
+            background: #080d18;
+            color: #eef4ff;
+            min-height: 100vh;
+            padding: 30px 16px;
+        }
+
+        nav {
+            max-width: 900px;
+            margin: 0 auto 30px;
+            font-size: 22px;
+            font-weight: bold;
+            color: #70baff;
+        }
+
+        .container {
+            max-width: 650px;
+            margin: auto;
+            padding: 30px;
+            background: #111a2b;
+            border: 1px solid #253650;
+            border-radius: 18px;
+            box-shadow: 0 0 30px #1674ff12;
+        }
+
+        h1 {
+            font-size: 28px;
+            margin-bottom: 10px;
+        }
+
+        .subtitle {
+            color: #aab8ce;
+            margin-bottom: 26px;
+            line-height: 1.6;
+        }
+
+        label {
+            display: block;
+            margin: 18px 0 8px;
+            font-size: 14px;
+            font-weight: bold;
+        }
+
+        input, textarea {
+            width: 100%;
+            padding: 13px;
+            background: #0a1220;
+            color: white;
+            border: 1px solid #34445e;
+            border-radius: 9px;
+            font-size: 15px;
+        }
+
+        textarea {
+            min-height: 100px;
+            resize: vertical;
+        }
+
+        input:focus, textarea:focus {
+            outline: 2px solid #479cff;
+            border-color: transparent;
+        }
+
+        input[type="file"] {
+            padding: 10px;
+        }
+
+        .buttons {
+            display: flex;
+            gap: 12px;
+            margin-top: 25px;
+        }
+
+        button, .back-link {
+            padding: 13px 18px;
+            border-radius: 9px;
+            font-weight: bold;
+            font-size: 14px;
+            cursor: pointer;
+            text-align: center;
+            text-decoration: none;
+        }
+
+        .submit {
+            flex: 1;
+            background: #4297ff;
+            color: #06101f;
+            border: none;
+        }
+
+        .cancel {
+            background: transparent;
+            color: #dce8fa;
+            border: 1px solid #42516b;
+        }
+
+        #message {
+            margin-top: 18px;
+            color: #8ec8ff;
+            line-height: 1.5;
+        }
+
+        @media (max-width: 480px) {
+            .container { padding: 22px 18px; }
+            .buttons { flex-direction: column; }
+        }
+
+</style>
+    </head>
+
+    <body>
+
+        <nav>Lost2Found</nav>
+        <main class="container">
+            <h1>Report Found Item</h1>
+            <p class="subtitle">
+                Found something? 
+                Share its details to help it reach its rightful owner.
+            </p>
+
+            <form id="foundForm">
+                <label for="itemName">Item Name *</label>
+                <input id="itemName" name="name" type="text" 
+                placeholder="e.g. Blue Water Bottle" required>
+
+                <label for="description">Description</label>
+                <textarea id="description" name="description" 
+                placeholder="Describe the item, colour and brand"></textarea>
+
+                <label for="location">Where did you find it? *</label>
+                <input id="location" name="location" type="text"
+                   placeholder="e.g. College Library" required>
+
+                <label for="itemImage">Upload Item Image (optional)</label>
+                <input id="itemImage" name="image" type="file"
+                   accept="image/*">
+
+                   <div class="buttons">
+                    <button class="submit" type="submit">
+                        Submit Found Report
+
+                    </button>
+
+                    <a class="back-link cancel" href="index.html">
+                    Cancel
+                </a>
+                   </div>
+
+            </form>
+
+<p id="message" role="status"></p>
+
+</main>
+
+        
+
+<script>
+    const form = document.getElementById("foundForm");
+    const message = document.getElementById("message");
+
+    form.addEventListener("submit", async function(event) {
+        event.preventDefault();
+
+        const name = document.getElementById("itemName").value.trim();
+        const location = document.getElementById("location").value.trim();
+
+        if (!name || !location) {
+            message.textContent = "Please fill in all required fields.";
+            return;
+        }
+
+        // Form fields + image
+        const formData = new FormData();
+        formData.append("name", name);
+        formData.append("status", "Found");
+        formData.append("location", location);
+
+        const imageInput = document.getElementById("itemImage");
+
+        if (imageInput.files.length > 0) {
+            formData.append("image", imageInput.files[0]);
+        }
+
+        message.textContent = "Saving found item...";
+
+        try {
+            const response = await fetch("http://localhost:3000/api/items", {
+                method: "POST",
+                body: formData
+            });
+
+            const result = await response.json();
+
+            if (!response.ok) {
+                throw new Error(result.message || "Could not save item.");
+            }
+
+            message.textContent = "Found item successfully saved!";
+            form.reset();
+
+        } catch (error) {
+            console.error("Error:", error);
+                message.textContent = "Error: " + error.message;
+
+        }
+    });
+</script>
+
+
+
+    </body>
+    </html>

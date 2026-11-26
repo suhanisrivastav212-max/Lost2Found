@@ -1,0 +1,217 @@
+
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login | Lost2Found</title>
+
+    <style>
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+        }
+
+        body {
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            background: #080713;
+            color: white;
+            font-family: Arial, sans-serif;
+            padding: 20px;
+        }
+
+        .login-card {
+            width: 100%;
+            max-width: 400px;
+            padding: 35px;
+            background: #121020;
+            border: 1px solid #38305d;
+            border-radius: 20px;
+            box-shadow: 0 0 35px #7040ff20;
+        }
+
+        .logo {
+            text-align: center;
+            font-size: 27px;
+            font-weight: bold;
+            margin-bottom: 10px;
+        }
+
+        .logo span {
+            color: #a78bfa;
+        }
+
+        .subtitle {
+            text-align: center;
+            color: #aaa5bd;
+            margin-bottom: 28px;
+        }
+
+        label {
+            display: block;
+            margin: 16px 0 8px;
+            color: #e2def5;
+        }
+
+        input {
+            width: 100%;
+            padding: 13px;
+            background: #0b0916;
+            border: 1px solid #39334f;
+            border-radius: 9px;
+            color: white;
+            outline: none;
+        }
+
+        input:focus {
+            border-color: #a78bfa;
+        }
+
+        button {
+            width: 100%;
+            margin-top: 24px;
+            padding: 14px;
+            border: none;
+            border-radius: 9px;
+            background: linear-gradient(90deg, #7c3aed, #a855f7);
+            color: white;
+            font-size: 16px;
+            font-weight: bold;
+            cursor: pointer;
+        }
+
+        .signup {
+            text-align: center;
+            margin-top: 22px;
+            color: #aaa5bd;
+        }
+
+        a {
+            color: #c4b5fd;
+            text-decoration: none;
+        }
+
+        .back {
+            display: block;
+            text-align: center;
+            margin-top: 20px;
+            color: #aaa5bd;
+        }
+
+        .admin-link {
+    text-align: center;
+    margin-top: 20px;
+    color: #9ca3af;
+    font-size: 14px;
+}
+
+.admin-link a {
+    color: #65baff;
+    text-decoration: none;
+    font-weight: bold;
+}
+
+.admin-link a:hover {
+    text-decoration: underline;
+}
+
+
+
+    </style>
+</head>
+
+<body>
+    <div class="login-card">
+        <div class="logo">✦ Lost<span>2Found</span></div>
+        <p class="subtitle">Welcome back! Log in to continue.</p>
+
+        <form id="loginForm">
+            <label for="email">Email Address</label>
+            <input
+                type="email"
+                id="email"
+                placeholder="Enter your email"
+                required
+            >
+
+            <label for="password">Password</label>
+            <input
+                type="password"
+                id="password"
+                placeholder="Enter your password"
+                required
+            >
+
+            <button type="submit">Login</button>
+        </form>
+
+        <p class="signup">
+            Don't have an account?
+            <a href="signup.html">Sign Up</a>
+        </p>
+
+        
+<p class="admin-link">
+    Are you an Admin?
+    <a href="admin-login.html">Login here</a>
+</p>
+
+
+        <a href="index.html" class="back">← Back to Home</a>
+    </div>
+
+    <script>
+        
+document.getElementById("loginForm").addEventListener("submit", async function(event) {
+    event.preventDefault();
+
+    // Get form values
+    const email = document.getElementById("email").value.trim();
+    const password = document.getElementById("password").value;
+
+    try {
+        // Send login request
+        const response = await fetch("http://localhost:3000/api/login", {
+            method: "POST",
+            headers: {
+                "Content-Type": "application/json"
+            },
+            body: JSON.stringify({
+                email: email,
+                password: password
+            })
+        });
+
+        const data = await response.json();
+
+        if (response.ok) {
+            // Save login details
+            localStorage.setItem("token", data.token);
+            localStorage.setItem("user", JSON.stringify(data.user));
+
+            alert("Login successful!");
+
+            // Redirect according to role
+            if (data.user.role === "admin") {
+                window.location.href = "admin-messages.html";
+            } else {
+                window.location.href = "index.html";
+            }
+
+        } else {
+            alert(data.message);
+        }
+
+    } catch (error) {
+        console.error("Login error:", error);
+        alert("Server se connection nahi ho pa raha hai.");
+    }
+});
+
+    </script>
+</body>
+</html>
